@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from sqlalchemy.sql import crud
 
+from app.api import crud  # dont import from sqlalchemy!
 from app.api.models import NoteSchema, NoteDB
 
 router = APIRouter()
@@ -15,5 +15,9 @@ async def create_note(payload: NoteSchema):
         "title": payload.title,
         "description": payload.description,
     }
-
     return response_object
+
+
+@router.get("/get_notes", response_model=list[NoteDB])
+async def get_all_notes():
+    return await crud.get_notes()
